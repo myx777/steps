@@ -1,13 +1,11 @@
 import { FormStep } from "./components/FormStep";
 
 function App() {
-
   return (
     <>
-    <FormStep />
-
+      <FormStep />
     </>
-  )
+  );
 }
 
-export default App
+export default App;

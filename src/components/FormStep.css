@@ -1,0 +1,42 @@
+.form__wrapper {
+  display: block;
+  width: 40vw;
+  margin: auto;
+}
+
+.inputs__wrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: end;
+}
+input {
+  width: 15vw;
+}
+
+.table__wrapper {
+  width: 40vw;
+  border-collapse: collapse;
+}
+
+.table__body {
+  border-collapse: collapse;
+  border: 1px solid black;
+}
+
+.table__body td {
+  border: none;
+  padding: 8px;
+}
+
+.button__delete {
+  background: none;
+  border: none;
+  font-size: 0; 
+  cursor: pointer;
+}
+
+.button__delete::before {
+  content: "✘"; 
+  font-size: 16px; 
+  margin-left: 5px; 
+}
