@@ -37,7 +37,7 @@ export const FormStep: FC = () => {
     setFormData({ date: "", distance: 0 });
   };
 
-  const handleDelete = (trainingToDelete) => {
+  const handleDelete = (trainingToDelete: TrainingData) => {
     setTrainingList((prevTrainingList) =>
       prevTrainingList.filter(
         (training) => training.date !== trainingToDelete.date
