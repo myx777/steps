@@ -1,0 +1,33 @@
+.table__wrapper {
+  width: 40vw;
+  border-collapse: collapse;
+}
+
+.table__body {
+  border-collapse: collapse;
+  border: 1px solid black;
+}
+
+.table__body td {
+  border: none;
+  padding: 8px;
+}
+
+.button__delete,
+.button__correct {
+  background: none;
+  border: none;
+  font-size: 0;
+  cursor: pointer;
+}
+
+.button__delete::before {
+  content: "✘";
+  font-size: 16px;
+  margin-left: 5px;
+}
+.button__correct::before {
+  content: "✎";
+  font-size: 16px;
+  margin-left: 5px;
+}

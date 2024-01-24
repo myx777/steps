@@ -1,7 +1,8 @@
-import { ChangeEvent, FC, useState } from "react";
-import { TrainingData } from "./TrainingData";
-import { formatDate } from "./formatData";
+import { FC, useState } from "react";
+import { TrainingData } from "./types/TrainingData";
 import "./Formstep.css";
+import { Inputs } from "./inputs/Inputs";
+import { TrainingTable } from "./table/TrainingTable";
 
 export const FormStep: FC = () => {
   const [formData, setFormData] = useState<TrainingData>({
@@ -11,101 +12,69 @@ export const FormStep: FC = () => {
 
   const [trainingList, setTrainingList] = useState<TrainingData[]>([]);
 
-  const handleFormData = (event: ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = event.target;
-    setFormData({ ...formData, [name]: value });
-  };
-
   const handleFormSubmit = (event: React.FormEvent) => {
     event.preventDefault();
-
+    if (!formData.date || isNaN(+formData.distance)) {
+      alert("Пожалуйста, заполните все поля корректно.");
+      return;
+    }
     const existingTraining = trainingList.find(
       (training) => training.date === formData.date
     );
 
     if (existingTraining) {
       existingTraining.distance =
-        parseInt(existingTraining.distance) + parseInt(formData.distance);
+        +existingTraining.distance + +formData.distance;
     } else {
-      setTrainingList((prevList) =>
-        [formData, ...prevList].sort(
+      setTrainingList((lastList) =>
+        [formData, ...lastList].sort(
           (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
         )
       );
     }
-
-    setFormData({ date: "", distance: 0 });
+    setFormData({
+      date: "",
+      distance: 0,
+    });
   };
 
   const handleDelete = (trainingToDelete: TrainingData) => {
-    setTrainingList((prevTrainingList) =>
-      prevTrainingList.filter(
-        (training) => training.date !== trainingToDelete.date
-      )
+    setTrainingList((lastList) =>
+      lastList.filter((lastList) => lastList.date !== trainingToDelete.date)
     );
+  };
+
+  const handleCorrect = (trainingToCorrect: TrainingData) => {
+    const correctTraining = trainingList.find(
+      (training) => training.date === trainingToCorrect.date
+    );
+
+    if (correctTraining) {
+      const { date, distance } = correctTraining;
+      setFormData({
+        date: date,
+        distance: distance,
+      });
+      handleDelete(trainingToCorrect);
+    }
   };
 
   return (
     <div className="form__wrapper">
       <form onSubmit={handleFormSubmit} id="form">
         <div className="inputs__wrapper">
-          <div className="input_wrapper">
-            <label htmlFor="dateInput">Дата (ДД.ММ.ГГ)</label>
-            <br />
-            <input
-              type="date"
-              id="dateInput"
-              name="date"
-              value={formData.date}
-              onChange={handleFormData}
-            />
-            <br />
-          </div>
-
-          <div className="input_wrapper">
-            <label htmlFor="distanceInput">Пройдено км</label>
-            <br />
-            <input
-              type="number"
-              id="distanceInput"
-              name="distance"
-              value={formData.distance}
-              onChange={handleFormData}
-            />
-            <br />
-          </div>
-
+          <Inputs formData={formData} setFormData={setFormData} />
           <div className="input_wrapper">
             <button type="submit">OK</button>
           </div>
         </div>
       </form>
 
-      <table className="table__wrapper">
-        <thead>
-          <tr>
-            <th>Дата</th>
-            <th>км</th>
-            <th>действия</th>
-          </tr>
-        </thead>
-        <tbody className="table__body">
-          {trainingList.map((training, index) => (
-            <tr key={index}>
-              <td>{formatDate(training.date)}</td>
-              <td>{training.distance}</td>
-              <td>
-                <button
-                  className="button__delete"
-                  onClick={() => handleDelete(training)}
-                >
-                  ✘
-                </button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+      <TrainingTable
+        trainingList={trainingList}
+        onDelete={handleDelete}
+        onCorrect={handleCorrect}
+      />
     </div>
   );
 };

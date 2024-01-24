@@ -1,0 +1,9 @@
+.form__wrapper {
+  display: block;
+  width: 40vw;
+  margin: auto;
+}
+
+input {
+  width: 15vw;
+}
